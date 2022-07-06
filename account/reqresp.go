@@ -1,5 +1,12 @@
 package account
 
+import (
+	"context"
+	"encoding/json"
+	"github.com/gorilla/mux"
+	"net/http"
+)
+
 type (
 	CreateUserRequest struct {
 		Email    string `json:"email"`
@@ -18,3 +25,23 @@ type (
 		Email string `json:"email "`
 	}
 )
+
+func encodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
+	return json.NewEncoder(w).Encode(response)
+}
+
+func decodeCreateUserRequest(ctx context.Context, r *http.Request) (interface{}, error) {
+	var req CreateUserRequest
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
+func decodeGetUserRequest(ctx context.Context, r *http.Request) (interface{}, error) {
+	var req GetUserRequest
+	vars := mux.Vars(r)
+	req.Id = vars["id"]
+	return req, nil
+}
