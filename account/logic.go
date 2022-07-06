@@ -30,7 +30,7 @@ func (s service) CreateUser(ctx context.Context, email string, password string) 
 		Password: password,
 	}
 
-	_, err := s.repository.CreateUser(ctx, user)
+	err := s.repository.CreateUser(ctx, user)
 	if err != nil {
 		level.Error(logger).Log("err", err)
 		return "", err
